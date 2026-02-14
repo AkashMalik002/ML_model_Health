@@ -36,11 +36,13 @@ Below is the evaluation of all 6 models implemented on the dataset.
 
 ### 2. Observations
 
-Below are the observations regarding the performance of each model on this dataset.
+Below are the observations for each model, based on the performance metrics above.
 
 | ML Model Name        | Observation about model performance |
 |----------------------|--------------------------------------|
-| Logistic Regression  | Provides a solid baseline with decent accuracy but lags behind ensemble methods because it assumes a linear relationship between CTG features and health classes, which may not always hold. |
-| Decision Tree        | Performs well and is easy to interpret, but shows slight overfitting compared to Random Forest, as single trees are sensitive to small variations in the data. |
-| KNN                  | Performance is heavily dependent on scaling (e.g., StandardScaler). It captures local clusters of “Suspect” and “Pathological” cases well but is slower at prediction time than tree‑based models. |
-| Naive Bayes          | Shows the lowest performance overall, likely because it assumes feature independ
+| Logistic Regression  | Works as a strong baseline and gives reliable accuracy, but it clearly falls behind the ensemble models. This is expected because it assumes a mostly linear relationship between CTG features and fetal health, which does not fully capture the complexity in the data. |
+| Decision Tree        | Delivers good performance and is easy to understand, which makes it attractive for interpretability. However, compared to Random Forest, it is more prone to overfitting and reacts more strongly to small changes in the training data. |
+| KNN                  | Performs reasonably well when the features are properly scaled and is able to pick up local patterns for Suspect and Pathological cases. The downside is that predictions can be slower and it is more sensitive to how the neighbors and distance metrics are chosen. |
+| Naive Bayes          | Shows the weakest overall performance in this setup. A likely reason is its strong independence assumption between features, which does not hold well for physiological signals where many variables are naturally correlated. |
+| Random Forest (Ensemble) | Emerges as one of the best models, combining high accuracy with better generalization than a single Decision Tree. By aggregating many trees, it reduces variance and handles the class imbalance (especially fewer Pathological cases) more robustly. |
+| XGBoost (Ensemble)   | Achieves the best scores across most metrics, making it the top performer in this project. Its gradient boosting strategy allows it to continuously correct previous mistakes, which helps it separate the more confusing Suspect cases from Normal ones very effectively. |
