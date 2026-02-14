@@ -11,9 +11,10 @@ from sklearn.model_selection import train_test_split
 st.set_page_config(page_title="Fetal Health Classification", layout="wide")
 st.title("Fetal Health Classification App")
 
-# 1. Load Data (Cached to prevent reloading on every interaction)
+# 1. Load Data
 @st.cache_data
 def load_data():
+    # Ensure fetal_health.csv is in the same folder
     df = pd.read_csv('fetal_health.csv')
     return df
 
@@ -72,58 +73,4 @@ with tab1:
         # Fill important features (Indices must match training data structure)
         input_data[0][0] = baseline_value
         input_data[0][1] = accelerations
-        input_data[0][3] = uterine_contractions
-        input_data[0][6] = prolongued_decelerations
-        input_data[0][7] = abnormal_short_term_variability
-        
-        # Scale if needed
-        if model_name in ["Logistic Regression", "KNN"]:
-            input_data = scaler.transform(input_data)
-            
-        prediction = model.predict(input_data)[0]
-        
-        status_map = {0: "Normal", 1: "Suspect", 2: "Pathological"}
-        result = status_map.get(prediction, "Unknown")
-        
-        # Display Result
-        if result == "Normal":
-            st.success(f"### Prediction: {result}")
-        elif result == "Suspect":
-            st.warning(f"### Prediction: {result}")
-        else:
-            st.error(f"### Prediction: {result}")
-
-# ==========================================
-# TAB 2: Model Performance (Metrics & Plots)
-# ==========================================
-with tab2:
-    st.subheader(f"Performance Metrics for {model_name}")
-    
-    with st.spinner("Calculating metrics..."):
-        # Re-create the Test Split (Must match the random_state in train_models.py)
-        X = df.drop('fetal_health', axis=1)
-        y = df['fetal_health'] - 1  # Adjust to 0, 1, 2
-        
-        # IMPORTANT: Use same random_state=42 as training
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        
-        # Scale X_test if needed
-        if model_name in ["Logistic Regression", "KNN"]:
-            X_test_processed = scaler.transform(X_test)
-        else:
-            X_test_processed = X_test
-            
-        # Get Predictions
-        y_pred = model.predict(X_test_processed)
-        
-        # 1. Accuracy Score
-        acc = accuracy_score(y_test, y_pred)
-        st.metric("Test Accuracy", f"{acc:.2%}")
-        
-        # 2. Confusion Matrix
-        st.write("### Confusion Matrix")
-        cm = confusion_matrix(y_test, y_pred)
-        
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                    xticklabels=["Normal", "Sus
+        input_data[0][3] = uterine
